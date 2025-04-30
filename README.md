@@ -1,51 +1,42 @@
-# Model Context Protocol (MCP)
+# Model Context Protocol
 
-Este repositorio contiene una implementación del Model Context Protocol (MCP), un estándar abierto desarrollado por Anthropic que permite crear conexiones seguras y bidireccionales entre fuentes de datos y herramientas de IA.
+Este repositorio contiene una implementación básica del Model Context Protocol (MCP), un estándar abierto desarrollado por Anthropic que permite conexiones seguras y bidireccionales entre fuentes de datos y herramientas de IA.
 
 ## ¿Qué es el Model Context Protocol?
 
-El Model Context Protocol es una arquitectura que permite:
+El Model Context Protocol es una arquitectura que permite a los desarrolladores:
+- Exponer sus datos a través de servidores MCP
+- Construir aplicaciones de IA (clientes MCP) que se conecten a estos servidores
+- Mantener el contexto entre diferentes herramientas y conjuntos de datos
 
-- Exponer datos a través de servidores MCP
-- Construir aplicaciones de IA (clientes MCP) que se conectan a estos servidores
-- Mantener el contexto mientras los sistemas de IA se mueven entre diferentes herramientas y conjuntos de datos
+## Estructura del Proyecto
 
-## Estructura del Repositorio
+- `/src` - Código fuente principal
+- `/examples` - Ejemplos de implementaciones
+- `/docs` - Documentación adicional
 
-- `/src`: Código fuente principal
-- `/examples`: Ejemplos de implementación
-- `/docs`: Documentación adicional
+## Primeros Pasos
 
-## Requisitos
+### Requisitos
 
-- Node.js (v14 o superior)
+- Node.js >= 16
 - npm o yarn
 
-## Instalación
+### Instalación
 
 ```bash
-git clone https://github.com/miguelxp12/ModelContextProtocol.git
-cd ModelContextProtocol
 npm install
 ```
 
-## Uso Básico
+### Ejecución del servidor de ejemplo
 
-```javascript
-// Ejemplo básico de uso
-const { MCPServer } = require('./src/server');
-
-const server = new MCPServer({
-  name: "Mi Servidor MCP",
-  description: "Un servidor MCP de ejemplo"
-});
-
-server.start();
+```bash
+npm start
 ```
 
 ## Contribuir
 
-Las contribuciones son bienvenidas. Por favor, revisa las directrices de contribución antes de enviar tu PR.
+Las contribuciones son bienvenidas. Por favor, lee nuestras directrices de contribución en `CONTRIBUTING.md`.
 
 ## Licencia
 
