@@ -1,0 +1,34 @@
+{
+  "name": "model-context-protocol",
+  "version": "0.1.0",
+  "description": "Implementación del Model Context Protocol (MCP) para conexiones seguras entre fuentes de datos y herramientas de IA",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miguelxp12/ModelContextProtocol.git"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "anthropic",
+    "ai",
+    "claude"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/miguelxp12/ModelContextProtocol/issues"
+  },
+  "homepage": "https://github.com/miguelxp12/ModelContextProtocol#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "node-fetch": "^3.3.1"
+  },
+  "type": "module"
+}
