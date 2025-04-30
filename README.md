@@ -1,60 +1,52 @@
 # Model Context Protocol (MCP)
 
-Este repositorio contiene una implementación y ejemplos del Model Context Protocol (MCP), un estándar abierto desarrollado por Anthropic que permite crear conexiones seguras y bidireccionales entre fuentes de datos y herramientas impulsadas por IA.
+Este repositorio contiene una implementación del Model Context Protocol (MCP), un estándar abierto desarrollado por Anthropic que permite crear conexiones seguras y bidireccionales entre fuentes de datos y herramientas de IA.
 
 ## ¿Qué es el Model Context Protocol?
 
 El Model Context Protocol es una arquitectura que permite:
 
-- Crear servidores MCP que exponen datos estructurados a clientes de IA
-- Desarrollar clientes MCP (aplicaciones de IA) que pueden conectarse a estos servidores
-- Mantener el contexto mientras los sistemas de IA interactúan con diferentes herramientas y conjuntos de datos
+- Exponer datos a través de servidores MCP
+- Construir aplicaciones de IA (clientes MCP) que se conectan a estos servidores
+- Mantener el contexto mientras los sistemas de IA se mueven entre diferentes herramientas y conjuntos de datos
 
 ## Estructura del Repositorio
 
-- `/server`: Implementación básica de un servidor MCP
-- `/client`: Ejemplos de clientes MCP
-- `/examples`: Casos de uso y ejemplos de implementación
-- `/docs`: Documentación adicional sobre el protocolo
+- `/src`: Código fuente principal
+- `/examples`: Ejemplos de implementación
+- `/docs`: Documentación adicional
 
-## Cómo Empezar
+## Requisitos
 
-### Requisitos Previos
-
-- Node.js v14 o superior
+- Node.js (v14 o superior)
 - npm o yarn
-- Conocimientos básicos de API REST
 
-### Instalación
+## Instalación
 
 ```bash
-# Clonar el repositorio
 git clone https://github.com/miguelxp12/ModelContextProtocol.git
-
-# Navegar al directorio
 cd ModelContextProtocol
-
-# Instalar dependencias
 npm install
 ```
 
-## Casos de Uso
+## Uso Básico
 
-Este proyecto puede utilizarse para:
+```javascript
+// Ejemplo básico de uso
+const { MCPServer } = require('./src/server');
 
-1. Conectar fuentes de datos privadas con modelos como Claude
-2. Crear herramientas que puedan interactuar con diversos sistemas a través de un protocolo estándar
-3. Experimentar con servidores MCP personalizados para casos de uso específicos
+const server = new MCPServer({
+  name: "Mi Servidor MCP",
+  description: "Un servidor MCP de ejemplo"
+});
+
+server.start();
+```
 
 ## Contribuir
 
-Las contribuciones son bienvenidas. Por favor, lee las guías de contribución antes de enviar pull requests.
+Las contribuciones son bienvenidas. Por favor, revisa las directrices de contribución antes de enviar tu PR.
 
 ## Licencia
 
-[MIT](LICENSE)
-
-## Recursos Adicionales
-
-- [Documentación oficial del Model Context Protocol](https://docs.anthropic.com/mcp) (cuando esté disponible)
-- [Comunidad de desarrolladores MCP](https://github.com/anthropics/mcp) (cuando esté disponible)
+MIT
