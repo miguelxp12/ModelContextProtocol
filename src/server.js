@@ -1,98 +1,80 @@
 /**
- * Model Context Protocol - Implementación básica de servidor
+ * Servidor básico para Model Context Protocol (MCP)
+ * 
+ * Este servidor implementa un endpoint básico de MCP que responde a solicitudes
+ * de contexto y puede ser consumido por clientes compatibles con MCP.
  */
 
-class MCPServer {
-  /**
-   * Crea una nueva instancia de servidor MCP
-   * @param {Object} config - Configuración del servidor
-   * @param {string} config.name - Nombre del servidor
-   * @param {string} config.description - Descripción del servidor
-   * @param {number} [config.port=3000] - Puerto del servidor
-   */
-  constructor(config) {
-    this.name = config.name;
-    this.description = config.description;
-    this.port = config.port || 3000;
-    this.handlers = new Map();
-    this.dataSources = new Map();
-    
-    console.log(`Inicializando servidor MCP: ${this.name}`);
-  }
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const WebSocket = require('ws');
+const { createMCPHandler } = require('./mcp-handler');
 
-  /**
-   * Registra un manejador para un tipo específico de solicitud
-   * @param {string} action - Tipo de acción
-   * @param {Function} handler - Función manejadora
-   */
-  registerHandler(action, handler) {
-    if (typeof handler !== 'function') {
-      throw new Error('El manejador debe ser una función');
-    }
-    this.handlers.set(action, handler);
-    console.log(`Manejador registrado para la acción: ${action}`);
-  }
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-  /**
-   * Registra una fuente de datos
-   * @param {string} name - Nombre de la fuente de datos
-   * @param {Object} source - Objeto de la fuente de datos
-   */
-  registerDataSource(name, source) {
-    this.dataSources.set(name, source);
-    console.log(`Fuente de datos registrada: ${name}`);
-  }
+// Middleware
+app.use(cors());
+app.use(express.json());
 
-  /**
-   * Procesa una solicitud entrante
-   * @param {Object} request - Solicitud entrante
-   * @returns {Promise<Object>} - Respuesta a la solicitud
-   */
-  async processRequest(request) {
-    const { action, params } = request;
-    
-    if (!this.handlers.has(action)) {
-      return {
-        success: false,
-        error: `Acción no soportada: ${action}`
-      };
-    }
-    
+// Punto de entrada principal para el protocolo MCP
+app.post('/mcp', async (req, res) => {
+  try {
+    const mcpHandler = createMCPHandler();
+    const result = await mcpHandler.handleRequest(req.body);
+    res.json(result);
+  } catch (error) {
+    console.error('Error en el procesamiento de la solicitud MCP:', error);
+    res.status(500).json({ 
+      error: 'Error en el procesamiento de la solicitud MCP',
+      details: error.message 
+    });
+  }
+});
+
+// Información sobre el servidor MCP
+app.get('/info', (req, res) => {
+  res.json({
+    name: 'Servidor MCP Básico',
+    version: '0.1.0',
+    protocol: 'mcp',
+    capabilities: [
+      'text-retrieval',
+      'file-search'
+    ]
+  });
+});
+
+// Iniciar servidor HTTP
+const server = app.listen(PORT, () => {
+  console.log(`Servidor MCP ejecutándose en http://localhost:${PORT}`);
+});
+
+// Configurar WebSocket para conexiones en tiempo real
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (ws) => {
+  console.log('Nueva conexión WebSocket establecida');
+  
+  ws.on('message', async (message) => {
     try {
-      const handler = this.handlers.get(action);
-      const result = await handler(params, this);
-      
-      return {
-        success: true,
-        data: result
-      };
+      const data = JSON.parse(message);
+      const mcpHandler = createMCPHandler();
+      const result = await mcpHandler.handleRequest(data);
+      ws.send(JSON.stringify(result));
     } catch (error) {
-      console.error(`Error procesando acción ${action}:`, error);
-      return {
-        success: false,
-        error: error.message || 'Error desconocido'
-      };
+      console.error('Error en el procesamiento del mensaje WebSocket:', error);
+      ws.send(JSON.stringify({ 
+        error: 'Error en el procesamiento del mensaje',
+        details: error.message 
+      }));
     }
-  }
+  });
+  
+  ws.on('close', () => {
+    console.log('Conexión WebSocket cerrada');
+  });
+});
 
-  /**
-   * Inicia el servidor MCP
-   */
-  start() {
-    console.log(`Servidor MCP iniciado en el puerto ${this.port}`);
-    console.log(`Nombre: ${this.name}`);
-    console.log(`Descripción: ${this.description}`);
-    // Aquí iría la lógica para iniciar un servidor HTTP real
-    // Este es un ejemplo simplificado
-  }
-
-  /**
-   * Detiene el servidor MCP
-   */
-  stop() {
-    console.log('Deteniendo servidor MCP...');
-    // Aquí iría la lógica para detener el servidor
-  }
-}
-
-module.exports = { MCPServer };
+module.exports = server;
